@@ -291,6 +291,16 @@ def getMostLikelyFoodHousePosition(evidence, bayesNet, eliminationOrder):
     (This should be a very short method.)
     """
     "*** YOUR CODE HERE ***"
+    from inference import inferenceByVariableElimination
+    query = inferenceByVariableElimination(bayesNet,FOOD_HOUSE_VAR,evidence,eliminationOrder)
+    prob_counter = 0
+    maxx = None
+    for eachRow in query.getAllPossibleAssignmentDicts():
+        prob = query.getProbability(eachRow)
+        if(prob > prob_counter):
+            prob_counter = prob
+            maxx = eachRow
+    return maxx
     util.raiseNotDefined()
     "*** END YOUR CODE HERE ***"
 
