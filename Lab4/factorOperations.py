@@ -256,6 +256,45 @@ def normalize(factor):
                             str(factor))
 
     "*** YOUR CODE HERE ***"
+    #finding the non condictional variable (who has const value in table) 
+    rowCount = 0
+    var_val_Dict = {}
+    for eachRow in factor.getAllPossibleAssignmentDicts():
+        rowCount +=1
+        for variable,value in eachRow.items():
+            var_val_Dict[(variable,value)] = 1+var_val_Dict.setdefault((variable,value),0)
+
+    normalizedCondictional = set()
+    for tu,c in var_val_Dict.items(): 
+        if c == rowCount:
+            normalizedCondictional.update((tu[0],))
+
+
+    unConditionedSet = set()
+    for unConditionedVar in factor.unconditionedVariables():
+        unConditionedSet.update((unConditionedVar,))
+    unConditionedSet = unConditionedSet.difference((normalizedCondictional))
+    
+    ConditionedSet = set()
+    for ConditionedVar in factor.conditionedVariables():
+        ConditionedSet.update((ConditionedVar,))
+    ConditionedSet = ConditionedSet.union(normalizedCondictional)
+
+
+    FactorObj = Factor(unConditionedSet,ConditionedSet,factor.variableDomainsDict())
+
+    summ = 0
+    for eachRow in factor.getAllPossibleAssignmentDicts():
+        summ += factor.getProbability(eachRow)
+
+    if summ == 0:
+        return None
+    
+    for eachRow in factor.getAllPossibleAssignmentDicts():
+        val = factor.getProbability(eachRow)
+        FactorObj.setProbability(eachRow,val/summ)
+
+    return FactorObj    
     util.raiseNotDefined()
     "*** END YOUR CODE HERE ***"
 
