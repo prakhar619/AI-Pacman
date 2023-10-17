@@ -175,7 +175,32 @@ def eliminateWithCallTracking(callTrackingList=None):
                     "unconditionedVariables: " + str(factor.unconditionedVariables()))
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        unConditionedSet = set()
+        for unConditionedVar in factor.unconditionedVariables():
+            unConditionedSet.update((unConditionedVar,))
+        
+        ConditionedSet = set()
+        for ConditionedVar in factor.conditionedVariables():
+            ConditionedSet.update((ConditionedVar,))
+        ConditionedSet = ConditionedSet.difference(unConditionedSet)
+        unConditionedSet.remove(eliminationVariable)
+
+        FactorObj = Factor(unConditionedSet,ConditionedSet,factor.variableDomainsDict())
+                
+
+
+        #getAllPossibleAssignementDicts() gives a list of Dictionary of each row
+        #[{'D': 'wet', 'W': 'sun'}, {'D': 'wet', 'W': 'rain'}, {'D': 'dry', 'W': 'sun'}, {'D': 'dry', 'W': 'rain'}]
+        for eachRow in FactorObj.getAllPossibleAssignmentDicts():
+            prob = 0
+            for elimination_val in factor.variableDomainsDict()[eliminationVariable]:   
+                eachRow.update({eliminationVariable:elimination_val})
+                prob += factor.getProbability(eachRow)
+                del eachRow[eliminationVariable]
+            FactorObj.setProbability(eachRow,prob)
+        #print(FactorObj)
+        return FactorObj
+        #util.raiseNotDefined()
         "*** END YOUR CODE HERE ***"
 
     return eliminate
