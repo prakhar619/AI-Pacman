@@ -102,7 +102,30 @@ def joinFactors(factors):
 
 
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    unConditionedSet = set()
+    for factor in factors:
+        for unConditionedVar in factor.unconditionedVariables():
+            unConditionedSet.update((unConditionedVar,))
+    
+    ConditionedSet = set()
+    for factor in factors:
+        for ConditionedVar in factor.conditionedVariables():
+            ConditionedSet.update((ConditionedVar,))
+    ConditionedSet = ConditionedSet.difference(unConditionedSet)
+
+
+    FactorObj = Factor(unConditionedSet,ConditionedSet,next(iter(factors)).variableDomainsDict())
+            
+    #getAllPossibleAssignementDicts() gives a list of Dictionary of each row
+    #[{'D': 'wet', 'W': 'sun'}, {'D': 'wet', 'W': 'rain'}, {'D': 'dry', 'W': 'sun'}, {'D': 'dry', 'W': 'rain'}]
+    for eachRow in FactorObj.getAllPossibleAssignmentDicts():
+        prob = 1
+        for factor in factors:
+            prob *= factor.getProbability(eachRow)
+        FactorObj.setProbability(eachRow,prob)
+
+    #print(FactorObj)
+    return FactorObj
     "*** END YOUR CODE HERE ***"
 
 

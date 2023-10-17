@@ -97,7 +97,7 @@ def constructBayesNet(gameState):
     variableDomainsDict = {}
 
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
     "*** END YOUR CODE HERE ***"
 
     variables = [X_POS_VAR, Y_POS_VAR] + HOUSE_VARS + obsVars
