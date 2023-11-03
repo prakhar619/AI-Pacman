@@ -4,6 +4,7 @@ from BayesNet import CPT
 #fileReader expectation:
     #variable listed in topological order
     #variable domain defined in earlier order
+    #cpt defined in topological order
 
 def csvList(line):
     lastValue = ""
@@ -44,5 +45,16 @@ def reader(filePath):
         bayesNet.CPT_list.append(cpt_obj)
         bayesNet.CPT_dict[X_var] = cpt_obj
 
+    #query finder
+    li = fileObject.readline().split("(")
+    li = li[1].split("|")
+    unconditioned = li[1].split(",")
+    conditioned = li[0]
+    query = dict()
+    evidence = dict()
+    for x in unconditioned:
+        evidence[x.strip('\n ').split("=")[0]] = x.strip('\n)').split("=")[1]
+    query[conditioned.strip().split("=")[0]] = conditioned.strip().split("=")[1]
+
     fileObject.close()
-    return bayesNet
+    return bayesNet,query,evidence
